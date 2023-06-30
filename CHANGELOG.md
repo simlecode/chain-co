@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.0
+
+* bump uo version to v0.6.0
+
 ## v0.6.0-rc1
 
 * fix: support MpoolGetConfig by @simlecode in https://github.com/ipfs-force-community/sophon-co/pull/51

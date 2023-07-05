@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/filecoin-project/lotus/api/v1api"
-	"github.com/ipfs-force-community/venus-common-utils/apiinfo"
+	vapi "github.com/filecoin-project/venus/venus-shared/api"
 
 	"github.com/filecoin-project/go-jsonrpc"
 	"github.com/hashicorp/go-multierror"
@@ -42,13 +42,13 @@ type NodeOption struct {
 
 // NodeInfo is a type combine cliutil.APIInfo and protocol version
 type NodeInfo struct {
-	apiinfo.APIInfo
+	vapi.APIInfo
 	Version string
 }
 
 func NewNodeInfo(addr string, version string) NodeInfo {
 	return NodeInfo{
-		APIInfo: apiinfo.ParseApiInfo(addr),
+		APIInfo: vapi.ParseApiInfo(addr),
 		Version: version,
 	}
 }

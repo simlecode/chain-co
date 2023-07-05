@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/ipfs-force-community/metrics"
-	apiInfo "github.com/ipfs-force-community/venus-common-utils/apiinfo"
 
 	"github.com/urfave/cli/v2"
 
 	"github.com/filecoin-project/lotus/api/v1api"
+	vapi "github.com/filecoin-project/venus/venus-shared/api"
 	local_api "github.com/ipfs-force-community/sophon-co/cli/api"
 
 	"github.com/ipfs-force-community/sophon-auth/jwtclient"
@@ -98,7 +98,7 @@ var runCmd = &cli.Command{
 			mCnf.ProbabilitySampler, mCnf.JaegerEndpoint, mCnf.ServerName = sampler, proxy, serverName
 		}
 
-		authApi := apiInfo.ParseApiInfo(cctx.String("auth"))
+		authApi := vapi.ParseApiInfo(cctx.String("auth"))
 
 		return serveRPC(
 			appCtx,

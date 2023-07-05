@@ -19,7 +19,6 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4
 	github.com/ipfs-force-community/metrics v1.0.1-0.20211022060227-11142a08b729
 	github.com/ipfs-force-community/sophon-auth v1.12.0
-	github.com/ipfs-force-community/venus-common-utils v0.0.0-20210714031758-ea0e25ff0ec4
 	github.com/ipfs/go-cid v0.3.2
 	github.com/ipfs/go-libipfs v0.4.1
 	github.com/ipfs/go-log/v2 v2.5.1

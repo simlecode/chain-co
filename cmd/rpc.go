@@ -15,17 +15,18 @@ import (
 	"github.com/filecoin-project/go-jsonrpc"
 	"github.com/filecoin-project/lotus/api"
 	"github.com/filecoin-project/lotus/api/v0api"
+	vapi "github.com/filecoin-project/venus/venus-shared/api"
+	"github.com/filecoin-project/venus/venus-shared/api/permission"
 	"github.com/ipfs-force-community/metrics"
 	"github.com/ipfs-force-community/metrics/ratelimit"
 	"github.com/ipfs-force-community/sophon-auth/core"
 	"github.com/ipfs-force-community/sophon-auth/jwtclient"
 	local_api "github.com/ipfs-force-community/sophon-co/cli/api"
-	apiInfo "github.com/ipfs-force-community/venus-common-utils/apiinfo"
 	logging "github.com/ipfs/go-log/v2"
 	"go.opencensus.io/plugin/ochttp"
 )
 
-func serveRPC(ctx context.Context, authApi apiInfo.APIInfo, rateLimitRedis, listen string, mCnf *metrics.TraceConfig, jwt jwtclient.IJwtAuthClient, full api.FullNode, localApi local_api.LocalAPI, stop dix.StopFunc, maxRequestSize int64) error {
+func serveRPC(ctx context.Context, authApi vapi.APIInfo, rateLimitRedis, listen string, mCnf *metrics.TraceConfig, jwt jwtclient.IJwtAuthClient, full api.FullNode, localApi local_api.LocalAPI, stop dix.StopFunc, maxRequestSize int64) error {
 	serverOptions := []jsonrpc.ServerOption{}
 	if maxRequestSize > 0 {
 		serverOptions = append(serverOptions, jsonrpc.WithMaxRequestSize(maxRequestSize))
@@ -39,7 +40,8 @@ func serveRPC(ctx context.Context, authApi apiInfo.APIInfo, rateLimitRedis, list
 		remoteJwtCli, _ = jwtclient.NewAuthClient(authApi.Addr, string(authApi.Token))
 	}
 
-	pma := api.PermissionedFullAPI(full)
+	pma := new(api.FullNodeStruct)
+	permission.PermissionProxy(full, pma)
 	if len(rateLimitRedis) > 0 && remoteJwtCli != nil {
 		log.Infof("use rate limit %s", rateLimitRedis)
 		limiter, err := ratelimit.NewRateLimitHandler(

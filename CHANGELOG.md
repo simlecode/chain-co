@@ -1,5 +1,18 @@
 # Changelog
 
+# v0.6.1
+
+* fix: support MpoolGetConfig https://github.com/ipfs-force-community/sophon-co/pull/57
+
+## v0.6.0
+
+* bump uo version to v0.6.0
+
+## v0.6.0-rc1
+
+* fix: support MpoolGetConfig by @simlecode in https://github.com/ipfs-force-community/sophon-co/pull/51
+* feat: rename the chain-co to sophon-co by @LinZexiao in https://github.com/ipfs-force-community/sophon-co/pull/54
+
 ## v0.5.1
 
 * update ffi

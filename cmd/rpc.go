@@ -82,11 +82,19 @@ func serveRPC(ctx context.Context, authApi vapi.APIInfo, rateLimitRedis, listen 
 	mux.Handle("/healthcheck", healthcheck.Handler())
 
 	allHandler := (http.Handler)(mux)
-	if reporter, err := metrics.RegisterJaeger(mCnf.ServerName, mCnf); err != nil {
-		log.Fatalf("register %s JaegerRepoter to %s failed:%s", mCnf.ServerName, mCnf.JaegerEndpoint, err)
-	} else if reporter != nil {
-		log.Infof("register jaeger-tracing exporter to %s, with node-name:%s", mCnf.JaegerEndpoint, mCnf.ServerName)
-		defer metrics.UnregisterJaeger(reporter)
+	if mCnf.JaegerTracingEnabled {
+		log.Infof("setup jaeger-tracing exporter to %s, with node-name:%s", mCnf.JaegerEndpoint, mCnf.ServerName)
+		exporter, err := metrics.SetupJaegerTracing(mCnf.ServerName, mCnf)
+		if err != nil {
+			return fmt.Errorf("SetupJaegerTracing failed:%w", err)
+		}
+		defer func() {
+			if exporter != nil {
+				if err := metrics.ShutdownJaeger(context.Background(), exporter); err != nil {
+					log.Warnf("failed to shutdown jaeger-tracing: %s", err)
+				}
+			}
+		}()
 		allHandler = &ochttp.Handler{Handler: allHandler}
 	}
 

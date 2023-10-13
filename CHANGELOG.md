@@ -1,6 +1,11 @@
 # Changelog
 
-# v0.6.1
+## 0.7.0-rc1
+
+* fix: test [[#59](https://github.com/ipfs-force-community/sophon-co/pull/59)]
+* chore: update deps
+
+## v0.6.1
 
 * fix: support MpoolGetConfig https://github.com/ipfs-force-community/sophon-co/pull/57
 

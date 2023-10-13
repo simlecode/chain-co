@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/filecoin-project/go-address"
-	datatransfer "github.com/filecoin-project/go-data-transfer"
+	datatransfer "github.com/filecoin-project/go-data-transfer/v2"
 	"github.com/filecoin-project/go-fil-markets/retrievalmarket"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/filecoin-project/go-state-types/big"
@@ -21,8 +21,8 @@ import (
 	"github.com/filecoin-project/lotus/node/repo/imports"
 	"github.com/google/uuid"
 	"github.com/ipfs-force-community/sophon-co/api"
+	blocks "github.com/ipfs/go-block-format"
 	"github.com/ipfs/go-cid"
-	"github.com/ipfs/go-libipfs/blocks"
 	"github.com/libp2p/go-libp2p/core/metrics"
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
@@ -94,6 +94,15 @@ func (p *UnSupport) ChainExport(in0 context.Context, in1 abi.ChainEpoch, in2 boo
 	return cli.ChainExport(in0, in1, in2, in3)
 }
 
+func (p *UnSupport) ChainExportRangeInternal(in0 context.Context, in1 types.TipSetKey, in2 types.TipSetKey, in3 api1.ChainExportConfig) (err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api ChainExportRangeInternal %v", err)
+		return
+	}
+	return cli.ChainExportRangeInternal(in0, in1, in2, in3)
+}
+
 func (p *UnSupport) ChainGetNode(in0 context.Context, in1 string) (out0 *api1.IpldObject, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
@@ -101,6 +110,15 @@ func (p *UnSupport) ChainGetNode(in0 context.Context, in1 string) (out0 *api1.Ip
 		return
 	}
 	return cli.ChainGetNode(in0, in1)
+}
+
+func (p *UnSupport) ChainHotGC(in0 context.Context, in1 api1.HotGCOpts) (err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api ChainHotGC %v", err)
+		return
+	}
+	return cli.ChainHotGC(in0, in1)
 }
 
 func (p *UnSupport) ChainPrune(in0 context.Context, in1 api1.PruneOpts) (err error) {

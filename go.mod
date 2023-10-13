@@ -12,7 +12,7 @@ require (
 	github.com/filecoin-project/go-jsonrpc v0.3.1
 	github.com/filecoin-project/go-state-types v0.12.4
 	github.com/filecoin-project/lotus v1.24.0-rc1
-	github.com/filecoin-project/venus v1.14.0-rc1
+	github.com/filecoin-project/venus v1.14.0-rc2
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-multierror v1.1.1

@@ -205,7 +205,7 @@ func (p *Proxy) EthBlockNumber(in0 context.Context) (out0 ethtypes.EthUint64, er
 	return cli.EthBlockNumber(in0)
 }
 
-func (p *Proxy) EthCall(in0 context.Context, in1 ethtypes.EthCall, in2 string) (out0 ethtypes.EthBytes, err error) {
+func (p *Proxy) EthCall(in0 context.Context, in1 ethtypes.EthCall, in2 ethtypes.EthBlockNumberOrHash) (out0 ethtypes.EthBytes, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
 		err = fmt.Errorf("api EthCall %v", err)
@@ -250,7 +250,7 @@ func (p *Proxy) EthGasPrice(in0 context.Context) (out0 ethtypes.EthBigInt, err e
 	return cli.EthGasPrice(in0)
 }
 
-func (p *Proxy) EthGetBalance(in0 context.Context, in1 ethtypes.EthAddress, in2 string) (out0 ethtypes.EthBigInt, err error) {
+func (p *Proxy) EthGetBalance(in0 context.Context, in1 ethtypes.EthAddress, in2 ethtypes.EthBlockNumberOrHash) (out0 ethtypes.EthBigInt, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
 		err = fmt.Errorf("api EthGetBalance %v", err)
@@ -295,7 +295,7 @@ func (p *Proxy) EthGetBlockTransactionCountByNumber(in0 context.Context, in1 eth
 	return cli.EthGetBlockTransactionCountByNumber(in0, in1)
 }
 
-func (p *Proxy) EthGetCode(in0 context.Context, in1 ethtypes.EthAddress, in2 string) (out0 ethtypes.EthBytes, err error) {
+func (p *Proxy) EthGetCode(in0 context.Context, in1 ethtypes.EthAddress, in2 ethtypes.EthBlockNumberOrHash) (out0 ethtypes.EthBytes, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
 		err = fmt.Errorf("api EthGetCode %v", err)
@@ -340,7 +340,7 @@ func (p *Proxy) EthGetMessageCidByTransactionHash(in0 context.Context, in1 *etht
 	return cli.EthGetMessageCidByTransactionHash(in0, in1)
 }
 
-func (p *Proxy) EthGetStorageAt(in0 context.Context, in1 ethtypes.EthAddress, in2 ethtypes.EthBytes, in3 string) (out0 ethtypes.EthBytes, err error) {
+func (p *Proxy) EthGetStorageAt(in0 context.Context, in1 ethtypes.EthAddress, in2 ethtypes.EthBytes, in3 ethtypes.EthBlockNumberOrHash) (out0 ethtypes.EthBytes, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
 		err = fmt.Errorf("api EthGetStorageAt %v", err)
@@ -376,7 +376,16 @@ func (p *Proxy) EthGetTransactionByHash(in0 context.Context, in1 *ethtypes.EthHa
 	return cli.EthGetTransactionByHash(in0, in1)
 }
 
-func (p *Proxy) EthGetTransactionCount(in0 context.Context, in1 ethtypes.EthAddress, in2 string) (out0 ethtypes.EthUint64, err error) {
+func (p *Proxy) EthGetTransactionByHashLimited(in0 context.Context, in1 *ethtypes.EthHash, in2 abi.ChainEpoch) (out0 *ethtypes.EthTx, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api EthGetTransactionByHashLimited %v", err)
+		return
+	}
+	return cli.EthGetTransactionByHashLimited(in0, in1, in2)
+}
+
+func (p *Proxy) EthGetTransactionCount(in0 context.Context, in1 ethtypes.EthAddress, in2 ethtypes.EthBlockNumberOrHash) (out0 ethtypes.EthUint64, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
 		err = fmt.Errorf("api EthGetTransactionCount %v", err)
@@ -401,6 +410,15 @@ func (p *Proxy) EthGetTransactionReceipt(in0 context.Context, in1 ethtypes.EthHa
 		return
 	}
 	return cli.EthGetTransactionReceipt(in0, in1)
+}
+
+func (p *Proxy) EthGetTransactionReceiptLimited(in0 context.Context, in1 ethtypes.EthHash, in2 abi.ChainEpoch) (out0 *api1.EthTxReceipt, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api EthGetTransactionReceiptLimited %v", err)
+		return
+	}
+	return cli.EthGetTransactionReceiptLimited(in0, in1, in2)
 }
 
 func (p *Proxy) EthMaxPriorityFeePerGas(in0 context.Context) (out0 ethtypes.EthBigInt, err error) {
@@ -464,6 +482,15 @@ func (p *Proxy) EthSubscribe(in0 context.Context, in1 jsonrpc.RawParams) (out0 e
 		return
 	}
 	return cli.EthSubscribe(in0, in1)
+}
+
+func (p *Proxy) EthSyncing(in0 context.Context) (out0 ethtypes.EthSyncingResult, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api EthSyncing %v", err)
+		return
+	}
+	return cli.EthSyncing(in0)
 }
 
 func (p *Proxy) EthUninstallFilter(in0 context.Context, in1 ethtypes.EthFilterID) (out0 bool, err error) {
@@ -824,6 +851,24 @@ func (p *Proxy) StateGetNetworkParams(in0 context.Context) (out0 *api1.NetworkPa
 		return
 	}
 	return cli.StateGetNetworkParams(in0)
+}
+
+func (p *Proxy) StateGetRandomnessDigestFromBeacon(in0 context.Context, in1 abi.ChainEpoch, in2 types.TipSetKey) (out0 abi.Randomness, err error) {
+	cli, err := p.Select(in2)
+	if err != nil {
+		err = fmt.Errorf("api StateGetRandomnessDigestFromBeacon %v", err)
+		return
+	}
+	return cli.StateGetRandomnessDigestFromBeacon(in0, in1, in2)
+}
+
+func (p *Proxy) StateGetRandomnessDigestFromTickets(in0 context.Context, in1 abi.ChainEpoch, in2 types.TipSetKey) (out0 abi.Randomness, err error) {
+	cli, err := p.Select(in2)
+	if err != nil {
+		err = fmt.Errorf("api StateGetRandomnessDigestFromTickets %v", err)
+		return
+	}
+	return cli.StateGetRandomnessDigestFromTickets(in0, in1, in2)
 }
 
 func (p *Proxy) StateGetRandomnessFromBeacon(in0 context.Context, in1 crypto.DomainSeparationTag, in2 abi.ChainEpoch, in3 []uint8, in4 types.TipSetKey) (out0 abi.Randomness, err error) {

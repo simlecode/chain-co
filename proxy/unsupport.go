@@ -1237,15 +1237,6 @@ func (p *UnSupport) SyncCheckpoint(in0 context.Context, in1 types.TipSetKey) (er
 	return cli.SyncCheckpoint(in0, in1)
 }
 
-func (p *UnSupport) SyncIncomingBlocks(in0 context.Context) (out0 <-chan *types.BlockHeader, err error) {
-	cli, err := p.Select(types.EmptyTSK)
-	if err != nil {
-		err = fmt.Errorf("api SyncIncomingBlocks %v", err)
-		return
-	}
-	return cli.SyncIncomingBlocks(in0)
-}
-
 func (p *UnSupport) SyncMarkBad(in0 context.Context, in1 cid.Cid) (err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {

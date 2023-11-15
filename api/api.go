@@ -311,6 +311,10 @@ type Proxy interface {
 	// network through this node
 	SyncSubmitBlock(ctx context.Context, blk *types.BlockMsg) error //perm:write
 
+	// SyncIncomingBlocks returns a channel streaming incoming, potentially not
+	// yet synced block headers.
+	SyncIncomingBlocks(ctx context.Context) (<-chan *types.BlockHeader, error) //perm:read
+
 	// MethodGroup: Mpool
 	// The Mpool methods are for interacting with the message pool. The message pool
 	// manages all incoming and outgoing 'messages' going over the network.
@@ -581,10 +585,6 @@ type UnSupport interface {
 	// genesis and these snapshots can be used to initialize Filecoin
 	// nodes.
 	ChainExportRangeInternal(ctx context.Context, head, tail types.TipSetKey, cfg api.ChainExportConfig) error //perm:admin
-
-	// SyncIncomingBlocks returns a channel streaming incoming, potentially not
-	// yet synced block headers.
-	SyncIncomingBlocks(ctx context.Context) (<-chan *types.BlockHeader, error) //perm:read
 
 	// SyncCheckpoint marks a blocks as checkpointed, meaning that it won't ever fork away from it.
 	SyncCheckpoint(ctx context.Context, tsk types.TipSetKey) error //perm:admin

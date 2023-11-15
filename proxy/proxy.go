@@ -1213,6 +1213,15 @@ func (p *Proxy) StateWaitMsg(in0 context.Context, in1 cid.Cid, in2 uint64, in3 a
 	return cli.StateWaitMsg(in0, in1, in2, in3, in4)
 }
 
+func (p *Proxy) SyncIncomingBlocks(in0 context.Context) (out0 <-chan *types.BlockHeader, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api SyncIncomingBlocks %v", err)
+		return
+	}
+	return cli.SyncIncomingBlocks(in0)
+}
+
 func (p *Proxy) SyncState(in0 context.Context) (out0 *api1.SyncState, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {

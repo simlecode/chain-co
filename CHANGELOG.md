@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.7.0-rc1
+## v0.7.0
+
+* fix: support SyncIncomingBlocks [[#62](https://github.com/ipfs-force-community/sophon-co/pull/62)]
+* chore: update deps
+
+## v0.7.0-rc1
 
 * fix: test [[#59](https://github.com/ipfs-force-community/sophon-co/pull/59)]
 * chore: update deps

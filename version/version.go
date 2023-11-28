@@ -1,5 +1,5 @@
 package version
 
-var Version = "0.7.0"
+var Version = "0.7.1"
 
 var CurrentCommit string

@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.1
+
+* fix: add eth rpc alias [[#64](https://github.com/ipfs-force-community/sophon-co/pull/64)]
+
 ## v0.7.0
 
 * fix: support SyncIncomingBlocks [[#62](https://github.com/ipfs-force-community/sophon-co/pull/62)]

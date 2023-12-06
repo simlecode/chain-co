@@ -1,13 +1,17 @@
 package co
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
 	"github.com/filecoin-project/lotus/chain/types"
+	"github.com/ipfs-force-community/metrics"
 )
 
 type Priority int
+
+var nodePriority = metrics.NewInt64WithCategory("node_priority", "node priority. 0:ErrPriority, 1:DelayPriority, 2:CatchUpPriority", "")
 
 const (
 	// MaxWeight is the default max weight of a node
@@ -80,6 +84,7 @@ func (s *Selector) getAddrOfPriority(priority int) []string {
 func (s *Selector) setPriority(priority int, addrs ...string) {
 	s.lk.Lock()
 	defer s.lk.Unlock()
+	ctx := context.Background()
 
 	if priority < ErrPriority {
 		priority = ErrPriority
@@ -90,6 +95,8 @@ func (s *Selector) setPriority(priority int, addrs ...string) {
 	for _, addr := range addrs {
 		current := s.priority[addr]
 		s.priority[addr] = priority
+
+		nodePriority.Set(ctx, addr, int64(priority))
 		log.Debugf("change priority of %s from %d to %d", addr, current, priority)
 	}
 }

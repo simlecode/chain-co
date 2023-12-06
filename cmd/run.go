@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"net"
 	"os"
 	"strings"
 
@@ -57,6 +58,10 @@ var runCmd = &cli.Command{
 			Name:  "trace-node-name",
 			Value: "venus-node-co",
 		},
+		&cli.StringFlag{
+			Name:  "metrics-endpoint",
+			Value: metrics.DefaultMetricsConfig().Exporter.Prometheus.EndPoint,
+		},
 	},
 	Action: func(cctx *cli.Context) error {
 		appCtx, appCancel := context.WithCancel(cctx.Context)
@@ -89,13 +94,32 @@ var runCmd = &cli.Command{
 
 		defer stop(context.Background()) // nolint:errcheck
 
-		mCnf := &metrics.TraceConfig{}
+		jCnf := &metrics.TraceConfig{}
 		proxy, sampler, serverName := strings.TrimSpace(cctx.String("jaeger-proxy")),
 			cctx.Float64("trace-sampler"),
 			strings.TrimSpace(cctx.String("trace-node-name"))
 
-		if mCnf.JaegerTracingEnabled = len(proxy) != 0; mCnf.JaegerTracingEnabled {
-			mCnf.ProbabilitySampler, mCnf.JaegerEndpoint, mCnf.ServerName = sampler, proxy, serverName
+		if jCnf.JaegerTracingEnabled = len(proxy) != 0; jCnf.JaegerTracingEnabled {
+			jCnf.ProbabilitySampler, jCnf.JaegerEndpoint, jCnf.ServerName = sampler, proxy, serverName
+		}
+
+		mCfg := metrics.DefaultMetricsConfig()
+		mCfg.Enabled = true
+		mCfg.Exporter.Prometheus.Namespace = "chain_co"
+		mCfg.Exporter.Graphite.Namespace = "chain_co"
+		if cctx.IsSet("metrics-endpoint") {
+			mCfg.Exporter.Prometheus.EndPoint = cctx.String("metrics-endpoint")
+			addr, err := net.ResolveTCPAddr("tcp", cctx.String("metrics-endpoint"))
+			if err != nil {
+				return err
+			}
+			mCfg.Exporter.Graphite.Host = addr.IP.String()
+			mCfg.Exporter.Graphite.Port = addr.Port
+		}
+
+		err = metrics.SetupMetrics(appCtx, mCfg)
+		if err != nil {
+			return err
 		}
 
 		authApi := vapi.ParseApiInfo(cctx.String("auth"))
@@ -105,7 +129,7 @@ var runCmd = &cli.Command{
 			authApi,
 			cctx.String("rate-limit-redis"),
 			cctx.String("listen"),
-			mCnf,
+			jCnf,
 			localJwt,
 			full,
 			localApi,

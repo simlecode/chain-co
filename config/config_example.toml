@@ -1,0 +1,41 @@
+
+[API]
+  ListenAddress = "0.0.0.0:1234"
+
+[Auth]
+  Token = ""
+  URL = "http://127.0.0.1:8989"
+
+[Metrics]
+  Enabled = false
+
+  [Metrics.Exporter]
+    Type = "prometheus"
+
+    [Metrics.Exporter.Graphite]
+      Host = "127.0.0.1"
+      Namespace = "sophon-co"
+      Port = 4568
+      ReportingPeriod = "10s"
+
+    [Metrics.Exporter.Prometheus]
+      EndPoint = "/ip4/0.0.0.0/tcp/4568"
+      Namespace = "sophon-co"
+      Path = "/debug/metrics"
+      RegistryType = "define"
+      ReportingPeriod = "10s"
+
+[[Nodes]]
+  TokenURL = "token:/ip4/127.0.0.1/tcp/3453"
+
+[[Nodes]]
+  TokenURL = "token:/ip4/127.0.0.1/tcp/3453"
+
+[RateLimit]
+  Redis = "http://127.0.0.1:6379"
+
+[Trace]
+  JaegerEndpoint = "http://127.0.0.1:14268/api/traces"
+  JaegerTracingEnabled = false
+  ProbabilitySampler = 1.0
+  ServerName = "sophon-co"

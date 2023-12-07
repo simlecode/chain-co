@@ -64,6 +64,12 @@ func main() {
 				Usage: "listen address for the service",
 				Value: "0.0.0.0:1234",
 			},
+			&cli.StringFlag{
+				Name:    "repo",
+				Usage:   "sophon-co repo path",
+				Value:   "~/.sophon-co",
+				EnvVars: []string{"SOPHON_CO_PATH"},
+			},
 		},
 
 		Commands: local,

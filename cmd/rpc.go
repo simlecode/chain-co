@@ -15,37 +15,37 @@ import (
 	"github.com/filecoin-project/go-jsonrpc"
 	"github.com/filecoin-project/lotus/api"
 	"github.com/filecoin-project/lotus/api/v0api"
-	vapi "github.com/filecoin-project/venus/venus-shared/api"
 	"github.com/filecoin-project/venus/venus-shared/api/permission"
 	"github.com/ipfs-force-community/metrics"
 	"github.com/ipfs-force-community/metrics/ratelimit"
 	"github.com/ipfs-force-community/sophon-auth/core"
 	"github.com/ipfs-force-community/sophon-auth/jwtclient"
 	local_api "github.com/ipfs-force-community/sophon-co/cli/api"
+	"github.com/ipfs-force-community/sophon-co/config"
 	logging "github.com/ipfs/go-log/v2"
 	"go.opencensus.io/plugin/ochttp"
 )
 
-func serveRPC(ctx context.Context, authApi vapi.APIInfo, rateLimitRedis, listen string, mCnf *metrics.TraceConfig, jwt jwtclient.IJwtAuthClient, full api.FullNode, localApi local_api.LocalAPI, stop dix.StopFunc, maxRequestSize int64) error {
+func serveRPC(ctx context.Context, cfg *config.Config, jwt jwtclient.IJwtAuthClient, full api.FullNode, localApi local_api.LocalAPI, stop dix.StopFunc, maxRequestSize int64) error {
 	serverOptions := []jsonrpc.ServerOption{}
 	if maxRequestSize > 0 {
 		serverOptions = append(serverOptions, jsonrpc.WithMaxRequestSize(maxRequestSize))
 	}
 
 	var remoteJwtCli *jwtclient.AuthClient
-	if len(authApi.Addr) > 0 {
-		if len(authApi.Token) == 0 {
+	if len(cfg.Auth.URL) > 0 {
+		if len(cfg.Auth.Token) == 0 {
 			return fmt.Errorf("auth token is need when auth api is set")
 		}
-		remoteJwtCli, _ = jwtclient.NewAuthClient(authApi.Addr, string(authApi.Token))
+		remoteJwtCli, _ = jwtclient.NewAuthClient(cfg.Auth.URL, string(cfg.Auth.Token))
 	}
 
 	pma := new(api.FullNodeStruct)
 	permission.PermissionProxy(full, pma)
-	if len(rateLimitRedis) > 0 && remoteJwtCli != nil {
-		log.Infof("use rate limit %s", rateLimitRedis)
+	if len(cfg.RateLimit.Redis) > 0 && remoteJwtCli != nil {
+		log.Infof("use rate limit %s", cfg.RateLimit.Redis)
 		limiter, err := ratelimit.NewRateLimitHandler(
-			rateLimitRedis,
+			cfg.RateLimit.Redis,
 			nil, &core.ValueFromCtx{},
 			jwtclient.WarpLimitFinder(remoteJwtCli),
 			logging.Logger("rate-limit"))
@@ -87,16 +87,16 @@ func serveRPC(ctx context.Context, authApi vapi.APIInfo, rateLimitRedis, listen 
 
 	allHandler := (http.Handler)(mux)
 
-	if reporter, err := metrics.SetupJaegerTracing(mCnf.ServerName, mCnf); err != nil {
-		log.Fatalf("register %s JaegerRepoter to %s failed:%s", mCnf.ServerName, mCnf.JaegerEndpoint, err)
+	if reporter, err := metrics.SetupJaegerTracing(cfg.Trace.ServerName, cfg.Trace); err != nil {
+		return fmt.Errorf("register %s JaegerReporter to %s failed: %s", cfg.Trace.ServerName, cfg.Trace.JaegerEndpoint, err)
 	} else if reporter != nil {
-		log.Infof("register jaeger-tracing exporter to %s, with node-name:%s", mCnf.JaegerEndpoint, mCnf.ServerName)
+		log.Infof("register jaeger-tracing exporter to %s, with node-name: %s", cfg.Trace.JaegerEndpoint, cfg.Trace.ServerName)
 		defer metrics.ShutdownJaeger(ctx, reporter) //nolint:errcheck
 		allHandler = &ochttp.Handler{Handler: allHandler}
 	}
 
 	server := http.Server{
-		Addr:    listen,
+		Addr:    cfg.API.ListenAddress,
 		Handler: allHandler,
 		BaseContext: func(net.Listener) context.Context {
 			return ctx
@@ -126,7 +126,7 @@ func serveRPC(ctx context.Context, authApi vapi.APIInfo, rateLimitRedis, listen 
 
 	signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGINT)
 
-	log.Infow("start http server", "addr", listen)
+	log.Infow("start http server", "addr", cfg.API.ListenAddress)
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}

@@ -23,8 +23,7 @@ var weightListCmd = &cli.Command{
 	Flags: []cli.Flag{},
 	Action: func(cctx *cli.Context) error {
 		ctx := cctx.Context
-		addr := cctx.String("listen")
-		client, closer, err := NewLocalRPCClient(ctx, addr)
+		client, closer, err := NewLocalRPCClient(cctx)
 		if err != nil {
 			return err
 		}
@@ -67,17 +66,12 @@ var weightSetCmd = &cli.Command{
 		}
 
 		ctx := cctx.Context
-		listen := cctx.String("listen")
-		client, closer, err := NewLocalRPCClient(ctx, listen)
+		client, closer, err := NewLocalRPCClient(cctx)
 		if err != nil {
 			return err
 		}
 		defer closer()
 
-		err = client.SetWeight(ctx, node, weight)
-		if err != nil {
-			return err
-		}
-		return nil
+		return client.SetWeight(ctx, node, weight)
 	},
 }

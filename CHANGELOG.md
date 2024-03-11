@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.0-rc1
+
+* feat: add metrics [[#66](https://github.com/ipfs-force-community/sophon-co/pull/66)]
+* feat: add repo [[#67](https://github.com/ipfs-force-community/sophon-co/pull/67)]
+* chore: update deps [[#68](https://github.com/ipfs-force-community/sophon-co/pull/68)]
+
 ## v0.7.1
 
 * fix: add eth rpc alias [[#64](https://github.com/ipfs-force-community/sophon-co/pull/64)]
@@ -24,8 +30,8 @@
 
 ## v0.6.0-rc1
 
-* fix: support MpoolGetConfig by @simlecode in https://github.com/ipfs-force-community/sophon-co/pull/51
-* feat: rename the chain-co to sophon-co by @LinZexiao in https://github.com/ipfs-force-community/sophon-co/pull/54
+* fix: support MpoolGetConfig [[#51](https://github.com/ipfs-force-community/sophon-co/pull/51)]
+* feat: rename the chain-co to sophon-co [[#54](https://github.com/ipfs-force-community/sophon-co/pull/54)]
 
 ## v0.5.1
 
@@ -38,14 +44,14 @@
 * update sophon-auth version to v1.11.0
 ## v0.5.0-rc1
 
-* Feat: recorver docker ci by @LinZexiao in https://github.com/ipfs-force-community/sophon-co/pull/32
-* fix: fix wrap rate litmit by @simlecode in https://github.com/ipfs-force-community/sophon-co/pull/33
-* feat: add status api to detect api ready by @hunjixin in https://github.com/ipfs-force-community/sophon-co/pull/34
-* fix: build deps before build docker by @LinZexiao in https://github.com/ipfs-force-community/sophon-co/pull/36
-* Feat: prevent launch without token by @LinZexiao in https://github.com/ipfs-force-community/sophon-co/pull/41
-* Feat: add docker push by @hunjixin in https://github.com/ipfs-force-community/sophon-co/pull/42
-* fix: block-not-found by @simlecode in https://github.com/ipfs-force-community/sophon-co/pull/45
-* chore: support MpoolBatchPushUntrusted by @simlecode in https://github.com/ipfs-force-community/sophon-co/pull/37
+* Feat: recorver docker ci [[#32](https://github.com/ipfs-force-community/sophon-co/pull/32)]
+* fix: fix wrap rate litmit [[#33](https://github.com/ipfs-force-community/sophon-co/pull/33)]
+* feat: add status api to detect api ready [[#34](https://github.com/ipfs-force-community/sophon-co/pull/34)]
+* fix: build deps before build docker [[#36](https://github.com/ipfs-force-community/sophon-co/pull/36)]
+* Feat: prevent launch without token [[#41](https://github.com/ipfs-force-community/sophon-co/pull/41)]
+* Feat: add docker push [[#42](https://github.com/ipfs-force-community/sophon-co/pull/42)]
+* fix: block-not-found [[#45](https://github.com/ipfs-force-community/sophon-co/pull/45)]
+* chore: support MpoolBatchPushUntrusted [[#37](https://github.com/ipfs-force-community/sophon-co/pull/37)]
 
 ## v0.4.0
 

@@ -12,13 +12,13 @@ require (
 	github.com/filecoin-project/go-jsonrpc v0.3.1
 	github.com/filecoin-project/go-state-types v0.13.0-rc.2
 	github.com/filecoin-project/lotus v1.24.0
-	github.com/filecoin-project/venus v1.14.1-0.20240307051130-9c713cace63f
+	github.com/filecoin-project/venus v1.15.0-rc1
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/golang-lru v0.6.0
 	github.com/ipfs-force-community/metrics v1.0.1-0.20231207081445-30178e706d09
-	github.com/ipfs-force-community/sophon-auth v1.14.0
+	github.com/ipfs-force-community/sophon-auth v1.15.0-rc1
 	github.com/ipfs/go-block-format v0.1.2
 	github.com/ipfs/go-cid v0.4.1
 	github.com/ipfs/go-log/v2 v2.5.1
@@ -241,4 +241,4 @@ replace github.com/filecoin-project/filecoin-ffi => ./extern/filecoin-ffi
 
 replace github.com/filecoin-project/go-jsonrpc => github.com/ipfs-force-community/go-jsonrpc v0.1.9
 
-replace github.com/filecoin-project/lotus => github.com/ipfs-force-community/lotus v0.8.1-0.20240306013437-f4ba6e1e7526
+replace github.com/filecoin-project/lotus => github.com/ipfs-force-community/lotus v0.8.1-0.20240311023706-83e32171e2dc

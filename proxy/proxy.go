@@ -223,7 +223,7 @@ func (p *Proxy) EthChainId(in0 context.Context) (out0 ethtypes.EthUint64, err er
 	return cli.EthChainId(in0)
 }
 
-func (p *Proxy) EthEstimateGas(in0 context.Context, in1 ethtypes.EthCall) (out0 ethtypes.EthUint64, err error) {
+func (p *Proxy) EthEstimateGas(in0 context.Context, in1 jsonrpc.RawParams) (out0 ethtypes.EthUint64, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
 		err = fmt.Errorf("api EthEstimateGas %v", err)
@@ -493,6 +493,24 @@ func (p *Proxy) EthSyncing(in0 context.Context) (out0 ethtypes.EthSyncingResult,
 	return cli.EthSyncing(in0)
 }
 
+func (p *Proxy) EthTraceBlock(in0 context.Context, in1 string) (out0 []*ethtypes.EthTraceBlock, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api EthTraceBlock %v", err)
+		return
+	}
+	return cli.EthTraceBlock(in0, in1)
+}
+
+func (p *Proxy) EthTraceReplayBlockTransactions(in0 context.Context, in1 string, in2 []string) (out0 []*ethtypes.EthTraceReplayBlockTransaction, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api EthTraceReplayBlockTransactions %v", err)
+		return
+	}
+	return cli.EthTraceReplayBlockTransactions(in0, in1, in2)
+}
+
 func (p *Proxy) EthUninstallFilter(in0 context.Context, in1 ethtypes.EthFilterID) (out0 bool, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
@@ -563,6 +581,15 @@ func (p *Proxy) GasEstimateMessageGas(in0 context.Context, in1 *types.Message, i
 		return
 	}
 	return cli.GasEstimateMessageGas(in0, in1, in2, in3)
+}
+
+func (p *Proxy) GetActorEvents(in0 context.Context, in1 *types.ActorEventFilter) (out0 []*types.ActorEvent, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api GetActorEvents %v", err)
+		return
+	}
+	return cli.GetActorEvents(in0, in1)
 }
 
 func (p *Proxy) MinerCreateBlock(in0 context.Context, in1 *api1.BlockTemplate) (out0 *types.BlockMsg, err error) {
@@ -790,6 +817,24 @@ func (p *Proxy) StateGetActor(in0 context.Context, in1 address.Address, in2 type
 	return cli.StateGetActor(in0, in1, in2)
 }
 
+func (p *Proxy) StateGetAllAllocations(in0 context.Context, in1 types.TipSetKey) (out0 map[verifreg.AllocationId]verifreg.Allocation, err error) {
+	cli, err := p.Select(in1)
+	if err != nil {
+		err = fmt.Errorf("api StateGetAllAllocations %v", err)
+		return
+	}
+	return cli.StateGetAllAllocations(in0, in1)
+}
+
+func (p *Proxy) StateGetAllClaims(in0 context.Context, in1 types.TipSetKey) (out0 map[verifreg.ClaimId]verifreg.Claim, err error) {
+	cli, err := p.Select(in1)
+	if err != nil {
+		err = fmt.Errorf("api StateGetAllClaims %v", err)
+		return
+	}
+	return cli.StateGetAllClaims(in0, in1)
+}
+
 func (p *Proxy) StateGetAllocation(in0 context.Context, in1 address.Address, in2 verifreg.AllocationId, in3 types.TipSetKey) (out0 *verifreg.Allocation, err error) {
 	cli, err := p.Select(in3)
 	if err != nil {
@@ -806,6 +851,15 @@ func (p *Proxy) StateGetAllocationForPendingDeal(in0 context.Context, in1 abi.De
 		return
 	}
 	return cli.StateGetAllocationForPendingDeal(in0, in1, in2)
+}
+
+func (p *Proxy) StateGetAllocationIdForPendingDeal(in0 context.Context, in1 abi.DealID, in2 types.TipSetKey) (out0 verifreg.AllocationId, err error) {
+	cli, err := p.Select(in2)
+	if err != nil {
+		err = fmt.Errorf("api StateGetAllocationIdForPendingDeal %v", err)
+		return
+	}
+	return cli.StateGetAllocationIdForPendingDeal(in0, in1, in2)
 }
 
 func (p *Proxy) StateGetAllocations(in0 context.Context, in1 address.Address, in2 types.TipSetKey) (out0 map[verifreg.AllocationId]verifreg.Allocation, err error) {
@@ -1211,6 +1265,15 @@ func (p *Proxy) StateWaitMsg(in0 context.Context, in1 cid.Cid, in2 uint64, in3 a
 		return
 	}
 	return cli.StateWaitMsg(in0, in1, in2, in3, in4)
+}
+
+func (p *Proxy) SubscribeActorEvents(in0 context.Context, in1 *types.ActorEventFilter) (out0 <-chan *types.ActorEvent, err error) {
+	cli, err := p.Select(types.EmptyTSK)
+	if err != nil {
+		err = fmt.Errorf("api SubscribeActorEvents %v", err)
+		return
+	}
+	return cli.SubscribeActorEvents(in0, in1)
 }
 
 func (p *Proxy) SyncIncomingBlocks(in0 context.Context) (out0 <-chan *types.BlockHeader, err error) {

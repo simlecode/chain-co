@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.8.0-rc1
+## v0.8.0
 
 * feat: add metrics [[#66](https://github.com/ipfs-force-community/sophon-co/pull/66)]
 * feat: add repo [[#67](https://github.com/ipfs-force-community/sophon-co/pull/67)]

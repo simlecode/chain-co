@@ -583,13 +583,13 @@ func (p *Proxy) GasEstimateMessageGas(in0 context.Context, in1 *types.Message, i
 	return cli.GasEstimateMessageGas(in0, in1, in2, in3)
 }
 
-func (p *Proxy) GetActorEvents(in0 context.Context, in1 *types.ActorEventFilter) (out0 []*types.ActorEvent, err error) {
+func (p *Proxy) GetActorEventsRaw(in0 context.Context, in1 *types.ActorEventFilter) (out0 []*types.ActorEvent, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
-		err = fmt.Errorf("api GetActorEvents %v", err)
+		err = fmt.Errorf("api GetActorEventsRaw %v", err)
 		return
 	}
-	return cli.GetActorEvents(in0, in1)
+	return cli.GetActorEventsRaw(in0, in1)
 }
 
 func (p *Proxy) MinerCreateBlock(in0 context.Context, in1 *api1.BlockTemplate) (out0 *types.BlockMsg, err error) {
@@ -1267,13 +1267,13 @@ func (p *Proxy) StateWaitMsg(in0 context.Context, in1 cid.Cid, in2 uint64, in3 a
 	return cli.StateWaitMsg(in0, in1, in2, in3, in4)
 }
 
-func (p *Proxy) SubscribeActorEvents(in0 context.Context, in1 *types.ActorEventFilter) (out0 <-chan *types.ActorEvent, err error) {
+func (p *Proxy) SubscribeActorEventsRaw(in0 context.Context, in1 *types.ActorEventFilter) (out0 <-chan *types.ActorEvent, err error) {
 	cli, err := p.Select(types.EmptyTSK)
 	if err != nil {
-		err = fmt.Errorf("api SubscribeActorEvents %v", err)
+		err = fmt.Errorf("api SubscribeActorEventsRaw %v", err)
 		return
 	}
-	return cli.SubscribeActorEvents(in0, in1)
+	return cli.SubscribeActorEventsRaw(in0, in1)
 }
 
 func (p *Proxy) SyncIncomingBlocks(in0 context.Context) (out0 <-chan *types.BlockHeader, err error) {

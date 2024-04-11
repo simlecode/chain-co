@@ -47,4 +47,5 @@ jobs:
           files: ./coverage.txt
           flags: unittests
           name: chain-co
+          fail_ci_if_error: true
           verbose: true
